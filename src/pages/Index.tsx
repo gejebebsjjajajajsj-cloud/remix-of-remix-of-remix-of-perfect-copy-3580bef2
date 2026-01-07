@@ -155,15 +155,18 @@ const Index = () => {
       }
 
       const anyData = data as any;
-      // TriboPay retorna qrCode e qrCodeBase64
-      if (!anyData.qrCodeBase64 && !anyData.qrCode) {
+      // TriboPay retorna pix.code e pix.imageBase64
+      const pixCodeValue = anyData.pix?.code || null;
+      const pixImageBase64 = anyData.pix?.imageBase64 || null;
+
+      if (!pixCodeValue) {
         console.error("Resposta inesperada da TriboPay:", anyData);
         setPixError("Resposta inválida do provedor de pagamento.");
         return;
       }
 
-      setPixQrBase64(anyData.qrCodeBase64 || null);
-      setPixCode(anyData.qrCode || null);
+      setPixQrBase64(pixImageBase64);
+      setPixCode(pixCodeValue);
       setCurrentOrderId(anyData.orderId || null);
       setCurrentOrderType(pendingProduct === "whatsapp" ? "whatsapp" : "subscription");
       trackEvent(pendingProduct === "whatsapp" ? "click_whatsapp_pix" : "click_plan_pix");
